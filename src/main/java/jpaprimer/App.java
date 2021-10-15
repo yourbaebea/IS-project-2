@@ -16,6 +16,7 @@ public class App
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ProfsAndStudents");
         EntityManager em = emf.createEntityManager();
         EntityTransaction et = em.getTransaction();
+        // update here
 
         Professor[] myprofs = { 
             new Professor("José", "D3.1"), 
