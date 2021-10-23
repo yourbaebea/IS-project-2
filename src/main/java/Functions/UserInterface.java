@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import Bean.UserBeanRemote;
 import Classes.*;
 
 
@@ -16,6 +17,8 @@ public class UserInterface
     private boolean loggedin = false;
     private boolean leave=false;
     private User user=null;
+
+    public UserBeanRemote bean;
     
 	public UserInterface()
 	{
@@ -27,7 +30,13 @@ public class UserInterface
 	{
 		try
 		{
+
+        
 			//funcions to connect to context or wtv
+
+            //bean =(UserBeanRemote)context.lookup();
+
+
             return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -35,7 +44,6 @@ public class UserInterface
 		}
 	}
 	                                                                                                                                                                                                                                                              
-	
 	public static void main(String[] args)
 	{
 
@@ -66,6 +74,9 @@ public class UserInterface
                         if(valid==1){
                             client.user= new User(name, password, address, Integer.parseInt(phone),email);
                             client.loggedin=true;
+                            
+                            //bean.RegisterUser(....)
+
                         }
                         else{
                             System.out.println("error in creating new user: error code "+ valid);
