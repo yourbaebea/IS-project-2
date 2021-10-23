@@ -10,15 +10,14 @@ import javax.persistence.Query;
 
 public class Reader {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ProfsAndStudents");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Players");
         EntityManager em = emf.createEntityManager();
-        Query q = em.createQuery("from Professor p");
+        //Query q = em.createQuery("select * from Professor p");
+        Query q = em.createQuery("from Player p");
 
-        List<Professor> lp = q.getResultList();
-        for (Professor p : lp) {
+        List<Player> lp = q.getResultList();
+        for (Player p : lp) {
             System.out.println(p);
-            for (Student s : p.getStudents())
-                System.out.println(s);
         }
     }
     

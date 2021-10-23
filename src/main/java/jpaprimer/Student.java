@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Student {
+    /*
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name, telephone;
@@ -61,4 +62,5 @@ public class Student {
     public String toString() {
         return this.name + ". Telephone: " + this.telephone + ". Age: " + this.age;
     }
+    */
 }
