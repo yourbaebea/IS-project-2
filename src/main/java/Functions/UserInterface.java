@@ -1,12 +1,13 @@
 package Functions;
 
+import Bean.UserBeanRemote;
+import Classes.Trip;
+import Classes.User;
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import org.apache.commons.validator.routines.EmailValidator;
-
-import Bean.UserBeanRemote;
-import Classes.*;
 
 
 
@@ -98,9 +99,9 @@ public class UserInterface
                         System.out.println("Password:");
                         password = sc.nextLine();
                 
-                        boolean check= login(email, password);
+                        boolean check= client.login(email, password);
                         if(check){
-                            menu();
+                            client.menu();
                         }
                         else System.out.println("error in login");
                         
@@ -294,7 +295,7 @@ public class UserInterface
         }
     }
 
-    private static boolean login(String email, String password){
+    private boolean login(String email, String password){
         //new query
         //Select * from users where email=:email
         //hashed password!!!!!!! we need to convert

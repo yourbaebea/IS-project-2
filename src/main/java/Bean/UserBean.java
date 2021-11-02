@@ -2,7 +2,7 @@ package Bean;
 
 import java.util.List;
 
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import Classes.*;
 
