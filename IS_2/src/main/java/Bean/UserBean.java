@@ -117,10 +117,10 @@ public class UserBean {
 
     public void menu() {
         while(this.loggedin){
-            System.out.println("User :\t"+ this.user.getName()+"\t\tMain Menu\n1-Purchase Ticket\n2-Return Ticket\n3-List all trips\n4-List all my tickets\n5-Transfer money into wallet\n6-Change personal information\n0 Logout\n-1 Delete account (and any info related to this account)\n\nSelect Option:");
+            System.out.println("User :\t"+ this.user.getName()+"\t\tMain Menu\n1-Purchase Ticket\n2-Return Ticket\n3-List all trips\n4-List all my trips\n5-Transfer money into wallet\n6-Change personal information\n0 Logout\n-1 Delete account (and any info related to this account)\n\nSelect Option:");
 
             int option = Integer.parseInt(sc.nextLine());
-            List<Trip> trips=new ArrayList<>();
+            List<Trip> trips;
             switch(option){
                 case 1: //buy ticket
                     System.out.println("Select origin:");
@@ -128,11 +128,8 @@ public class UserBean {
                     System.out.println("Select destination:");
                     String destination = sc.nextLine();
 
-                    //new query
-                    //Select * from trips t where t.origin=:origin and t.destination=:destination"
-                    //check if date > current time
-                    trips= new ArrayList<>();
-                    //this should be the return of the query
+                    //Trips with that origin and destination
+                    trips= bd.listAvailableTrips(origin, destination);
 
                     purchaseTicket(trips);
 
@@ -149,6 +146,7 @@ public class UserBean {
 
                     returnTicket(trips);
                     break;
+
                 case 3: //list all trips with interval
                     System.out.println("inicial date:");
                     String start = sc.nextLine();
@@ -167,16 +165,13 @@ public class UserBean {
                         e.printStackTrace();
                     }
                     break;
-                case 4: //list all of users tickets
-                    //new query
-                    //Select trip_id from tickets t where t.buyer_id=:id"
-                    //get all trips with this trip_id
-                    //:id is this.user.getId();
-                    //check if date > current time
-                    trips= new ArrayList<>();
-                    //this should be the return of the query
+
+                case 4: //list all of users trips
+
+                    trips= bd.listUserTrips(this.user.getId());
                     listTrips(trips);
                     break;
+
                 case 5: //adding money to wallet
                     System.out.println("Quantity:");
                     String cash = sc.nextLine();
@@ -243,7 +238,8 @@ public class UserBean {
     }
 
     public void purchaseTicket(List<Trip> trips){
-        
+
+        //List Available Trips
         listTrips(trips);
 
         System.out.println("Buy Trip with id (-1 to leave purchase):");
@@ -264,12 +260,12 @@ public class UserBean {
 
         double value= trips.get(trip_id).getPrice();
 
-        /*if(this.user.checkWallet(-value)){
+        if(this.user.checkWallet(-value)){
             System.out.println("Processing purchase....");
 
-            if(trips.get(trip_id).createTicket(this.user.getId())){
+            //Creates the new Ticket and updates the database
+            if(bd.createTicket(this.user.getId(),trips.get(trip_id),this.user)){
                 System.out.println("Ticket was purchased!");
-                this.user.balanceWallet(-value);
             }
             else{
                 System.out.println("Ticket was not purchased, please try other trip or check if you already have a ticket for this trip...");
@@ -279,7 +275,7 @@ public class UserBean {
         }
         else{
             System.out.println("Wallet problems," + this.user.getWallet() +" is not enought to purchase this trip, please transfer some money to your account and try again");
-        }*/
+        }
         
     }
 

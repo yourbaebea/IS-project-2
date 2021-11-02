@@ -32,17 +32,12 @@ public class Trip implements Serializable {
         this.occupancy=0;
     }
 
-    public boolean createTicket(Long buyer_id){
-        if (this.capacity>this.occupancy){
-            for(Ticket t: this.tickets) if(t.getBuyer_id()== buyer_id){
-                return false;
-            }
-            this.occupancy++;
-            this.tickets.add(new Ticket(buyer_id));
-            return true;
-        }
-        return false;
+    public Date getTime() {
+        return time;
+    }
 
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public boolean returnTicket(Long buyer_id){
@@ -65,6 +60,53 @@ public class Trip implements Serializable {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getOccupancy() {
+        return occupancy;
+    }
+
+    public void setOccupancy(int occupancy) {
+        this.occupancy = occupancy;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
 
     @Override
     public String toString() {

@@ -83,4 +83,5 @@ public class Utilizador implements Serializable
     public Long getId() {
         return id;
     }
+
 }
