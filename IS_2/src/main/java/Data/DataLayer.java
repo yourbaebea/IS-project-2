@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import Classes.*;
 
+import java.util.Date;
 import java.util.List;
 
 import static java.lang.System.*;
@@ -27,7 +28,7 @@ public class DataLayer{
         }
     }
 
-    public void RegisterUser(Utilizador user) {
+    public void registerUser(Utilizador user) {
         try {
             em.getTransaction().begin();
             em.persist(user);
@@ -38,33 +39,57 @@ public class DataLayer{
         }
     }
 
-    public boolean LoginUser(String email, String password){
+    public Utilizador loginUser(String email, String password){
         //new query
         //Select * from users where email=:email
         //hashed password!!!!!!! we need to convert
 
-        Query q = em.createQuery(
-                        "SELECT c FROM Utilizador c WHERE c.email=:emailUser and c.password=:passwordUser")
-                .setParameter("emailUser", email)
-                .setParameter("passwordUser",password);
-
+        Query q = em.createQuery("SELECT c FROM Utilizador c ");
         List<Utilizador> lp = q.getResultList();
-        return lp.size() > 0;
+        for(Utilizador l : lp){
+            if(l.getEmail().equals(email) && l.getPassword().equals(password)){
+                return l;
+            }
+        }
+        return null;
+    }
+
+    public void incrementWallet(Utilizador user ,Double value){
+        em.getTransaction().begin();
+        user.balanceWallet(value);
+        em.getTransaction().commit();
 
     }
-	/*
-    
-    public void example(String name) {
-    	String jpqlU = "SELECT DISTINCT r FROM Users r WHERE r.name = :name";
-		
-		TypedQuery<User> typedQueryU = em.createQuery(jpqlU, User.class);
-		typedQueryU.setParameter("name", name);
-		User mylistU = typedQueryU.getSingleResult();
-    	
-		do stuff.........
-    	em.persist(.....);  	
-    }
-	*/
 
+    public void changeData(Utilizador user, String change , Integer option){
+        em.getTransaction().begin();
+        switch(option){
+            case 1:
+                user.setName(change);
+                break;
+            case 2:
+                user.setPassword(change);
+                break;
+            case 3:
+                user.setEmail(change);
+                break;
+            case 4:
+                user.setAddress(change);
+                break;
+            case 5:
+                user.setPhone(Integer.parseInt(change));
+                break;
+        }
+        em.getTransaction().commit();
+    }
+
+    public List<Trip> listTrips(Date start , Date end){
+
+        Query f = em.createQuery("SELECT t FROM Trip t WHERE t.time>=:start OR t.time<=:end")
+                .setParameter("start",start)
+                .setParameter("end",end);
+
+        return f.getResultList();
+    }
 }
    

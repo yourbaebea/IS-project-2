@@ -5,7 +5,10 @@ import Classes.Trip;
 import Classes.Utilizador;
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -68,9 +71,8 @@ public class UserBean {
                 
                         if(valid==1){
                             client.user= new Utilizador(name, password, address, Integer.parseInt(phone),email);
-                            client.loggedin=true;
 
-                            client.bd.RegisterUser(client.user);
+                            client.bd.registerUser(client.user);
                             System.out.println("Conta criada com sucesso\n");
 
                         }
@@ -93,9 +95,10 @@ public class UserBean {
                         email = sc.nextLine();
                         System.out.println("Password:");
                         password = sc.nextLine();
-                
-                        boolean check= client.bd.LoginUser(email, password);
-                        if(check){
+
+                        client.user = client.bd.loginUser(email, password);
+                        if(client.user!=null){
+                            client.loggedin=true;
                             client.menu();
                         }
                         else System.out.println("error in login");
@@ -112,9 +115,9 @@ public class UserBean {
         }
     }
 
-    public void menu(){
+    public void menu() {
         while(this.loggedin){
-            System.out.println("User"+ this.user.getName()+"\t\tMain Menu\n1-Purchase Ticket\n2-Return Ticket\n3-List all trips\n4-List all my tickets\n5-Transfer money into wallet\n6-other stuff here\n0 Logout\n-1 Delete account (and any info related to this account)\n\nSelect Option:");
+            System.out.println("User :\t"+ this.user.getName()+"\t\tMain Menu\n1-Purchase Ticket\n2-Return Ticket\n3-List all trips\n4-List all my tickets\n5-Transfer money into wallet\n6-Change personal information\n0 Logout\n-1 Delete account (and any info related to this account)\n\nSelect Option:");
 
             int option = Integer.parseInt(sc.nextLine());
             List<Trip> trips=new ArrayList<>();
@@ -152,12 +155,17 @@ public class UserBean {
                     System.out.println("final date:");
                     String end = sc.nextLine();
                     //convert to Date
+                    SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                    try{
+                        Date data_inicio = formatter.parse(start);
+                        Date data_fim = formatter.parse(end);
+                        trips= bd.listTrips(data_inicio,data_fim);
+                        //this should be the return of the query
+                        listTrips(trips);
 
-                    //new query
-                    //Select * from trips t where t.date>=:start and t.date<=:end"
-                    trips= new ArrayList<>();
-                    //this should be the return of the query
-                    listTrips(trips);
+                    }catch(ParseException e){
+                        e.printStackTrace();
+                    }
                     break;
                 case 4: //list all of users tickets
                     //new query
@@ -176,24 +184,62 @@ public class UserBean {
                     System.out.println("Processing...");
                     try {
                         value= Double.parseDouble(cash);
-                        //this.user.balanceWallet(value);
+                        bd.incrementWallet(this.user,value);
                         System.out.println("Current value inside wallet: "+ this.user.getWallet());
                     } catch (Exception e) {
                         System.out.println("Value was not valid");
                     }
-
-                        
+                    break;
+                case 6:
+                    alterarDados();
+                    break;
                 case 0:
                     this.loggedin=false;
                     break;
                 default:
                     System.out.println("option was not valid, back to the menu");
             
-                }
-
-
+            }
         }
+    }
 
+    public void alterarDados(){
+        System.out.println("\tEscolha o que alterar\t\n\n 1 - Nome\n 2 - Palavra-passe\n 3 - Email\n 4 - Morada\n 5 - Telefone\n -1 - Voltar\n");
+        int a= Integer.parseInt(sc.nextLine());
+        switch(a){
+            case 1:
+                System.out.println("Novo Nome\n");
+                String nome = sc.nextLine();
+                bd.changeData(this.user,nome,1);
+                alterarDados();
+                break;
+            case 2:
+                System.out.println("Nova Passe\n");
+                String passe = sc.nextLine();
+                bd.changeData(this.user,passe,2);
+                alterarDados();
+                break;
+            case 3:
+                System.out.println("Novo Email\n");
+                String email = sc.nextLine();
+                bd.changeData(this.user,email,3);
+                alterarDados();
+                break;
+            case 4:
+                System.out.println("Nova Morada\n");
+                String morada = sc.nextLine();
+                bd.changeData(this.user,morada,4);
+                alterarDados();
+                break;
+            case 5:
+                System.out.println("Novo Telefone\n");
+                String telefone = sc.nextLine();
+                bd.changeData(this.user,telefone,5);
+                alterarDados();
+                break;
+            case -1:
+                menu();
+        }
     }
 
     public void purchaseTicket(List<Trip> trips){

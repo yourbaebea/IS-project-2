@@ -32,7 +32,11 @@ public class Utilizador implements Serializable
         this.wallet=0;
     }
 
-    /*public void balanceWallet(double value) {
+    public String getEmail() {
+        return email;
+    }
+
+    public void balanceWallet(double value) {
         this.wallet=this.wallet + value;
     }
 
@@ -40,14 +44,6 @@ public class Utilizador implements Serializable
         return this.wallet + value >= 0;
     }
 
-    public boolean login(String password){
-        if(this.password.equals(password)){
-            this.session=true;
-            return true;
-        }
-        return false;
-    }
-*/
     public void setAddress(String address) {
         this.address = address;
     }
