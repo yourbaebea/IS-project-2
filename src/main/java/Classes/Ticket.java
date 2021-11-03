@@ -15,6 +15,9 @@ public class Ticket implements Serializable {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
+    @Id
+    private Long id;
+
     public Ticket(){}
 
     public Ticket(Long buyer_id){
@@ -25,6 +28,12 @@ public class Ticket implements Serializable {
         return buyer_id;
     }
 
-    
-    
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

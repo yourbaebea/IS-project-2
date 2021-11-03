@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-public class User implements Serializable
+public class Utilizador implements Serializable
 {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,10 +20,9 @@ public class User implements Serializable
     private double wallet;
 	private boolean session;
 
+    public Utilizador(){}
 
-    public User(){}
-
-    public User(String name, String password, String address, int phone, String email){
+    public Utilizador(String name, String password, String address, int phone, String email){
         this.name= name;
         this.password=password;
         this.address= address;
@@ -33,26 +32,17 @@ public class User implements Serializable
         this.wallet=0;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void balanceWallet(double value) {
         this.wallet=this.wallet + value;
     }
 
     public boolean checkWallet(double value) {
-        if(this.wallet + value>=0) {
-            return true;
-        }
-        return false;
+        return this.wallet + value >= 0;
     }
-
-
-    public boolean login(String password){
-        if(this.password==password){
-            this.session=true;
-            return true;
-        }
-        return false;
-    }
-
 
     public void setAddress(String address) {
         this.address = address;
@@ -77,7 +67,6 @@ public class User implements Serializable
     public void setSession(boolean session) {
         this.session = session;
     }
-    
 
     public String getPassword() {
         return password;
@@ -87,12 +76,12 @@ public class User implements Serializable
         return name;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public double getWallet() {
         return wallet;
+    }
+
+    public Long getId() {
+        return id;
     }
 
 }

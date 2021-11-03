@@ -1,4 +1,4 @@
-package Functions;
+package Bean;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,19 +7,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import org.apache.commons.validator.routines.EmailValidator;
 
 import Classes.*;
 
 
 
-public class ManagerInterface
+public class ManagerBean
 {
 
     public static final Scanner sc = new Scanner(System.in);
     private boolean leave=false;
     
-	public ManagerInterface()
+	public ManagerBean()
 	{
         // ENUNCIADO
         //To create manager accounts the system should use a script, e.g., written in JPA.
@@ -44,7 +43,7 @@ public class ManagerInterface
 	public static void main(String[] args)
 	{
 
-        ManagerInterface manager = new ManagerInterface();
+        ManagerBean manager = new ManagerBean();
         if(manager.connect()){
 
             while(!manager.leave){
@@ -119,7 +118,7 @@ public class ManagerInterface
                         trips= new ArrayList<>();
                         //this should be the return of the query
                         
-                        listTrips(trips);
+                        manager.listTrips(trips);
 
                         System.out.println("List all users in trip by id: (-1 to leave)");
                         String response = sc.nextLine();
@@ -140,7 +139,7 @@ public class ManagerInterface
                         int trip_id= trips.get(r).getId();
                         
 
-                        listUsers(trip_id);
+                        manager.listUsers(trip_id);
 
                         break;
 
@@ -164,7 +163,7 @@ public class ManagerInterface
         //Select * from users where id=:buyers //this buyers is the list of buyer_ids
         
         //List<User> u = q.getResultList();
-        List<User> u= new ArrayList<>();
+        List<Utilizador> u= new ArrayList<>();
 
         if (u.size()==0){
             System.out.println("There are no current users in this trip");
@@ -194,7 +193,7 @@ public class ManagerInterface
         //Select * from users where id=:buyers //this buyers is the list of buyer_ids
         
         //List<User> u = q.getResultList();
-        List<User> u= new ArrayList<>();
+        List<Utilizador> u= new ArrayList<>();
         int count= 1; // count of the buyer id
 
         if (u.size()==0){
