@@ -24,7 +24,6 @@ public class UserBean {
 
 	public UserBean()
 	{
-        ;
         //connections here
 		//idk whats going here but i would say this is where we initiate a new user.session
 	}

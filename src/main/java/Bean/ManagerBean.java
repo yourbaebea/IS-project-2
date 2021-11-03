@@ -3,26 +3,27 @@ package Bean;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 import Classes.*;
+import Data.DataLayer;
 
+//questions for the teacher, do we need to save the manager in the db?
 
 
 public class ManagerBean
 {
 
     public static final Scanner sc = new Scanner(System.in);
+    private boolean loggedin = false;
     private boolean leave=false;
-    
+    public DataLayer bd=null;
+
 	public ManagerBean()
 	{
-        // ENUNCIADO
-        //To create manager accounts the system should use a script, e.g., written in JPA.
-
         //connections here
 		//idk whats going here but i would say this is where we initiate a new user.session
 	}
@@ -31,14 +32,15 @@ public class ManagerBean
 	{
 		try
 		{
-			//funcions to connect to context or wtv
+            bd = new DataLayer();
+            //bean =(ManagerBeanRemote)context.lookup();
             return true;
 		}catch(Exception e) {
 			e.printStackTrace();
             return false;
 		}
 	}
-	                                                                                                                                                                                                                                                              
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 	
 	public static void main(String[] args)
 	{
@@ -47,10 +49,11 @@ public class ManagerBean
         if(manager.connect()){
 
             while(!manager.leave){
-                System.out.println("Manager Interface, no login needed ? \n1-Create Trip\n2-Delete Trip\n3-List top 5 users\n4-List trips by interval\n5-List trips on certain day\n-1 Exit\n\nSelect Option:");
+                System.out.println("Manager Interface, no login needed ? \n1-Create Trip\n2-Delete Trip\n3-List top 5 users\n4-List trips by interval\n5-List trips on certain day\n6-get revenue of the day, this should be automatic but rn it isnt\n-1 Exit\n\nSelect Option:");
 
 			    int option = Integer.parseInt(sc.nextLine());
                 List<Trip> trips;
+                SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");
                 
                 switch (option) {
                     case 1: //create trip
@@ -107,46 +110,82 @@ public class ManagerBean
                             break;
                         }
 
-                        Trip trip= new Trip(origin, destination, date, p, c);
+                        System.out.println(manager.bd.createTrip(new Trip(origin, destination, date, p, c)));
 
-                        //update query to the trips table
-                    case 2:
-                        
-                        //new query
-                        //Select * from trips"
-                        //check if date > current time
-                        trips= new ArrayList<>();
-                        //this should be the return of the query
+                    case 2: //Delete trip
+                        trips= manager.bd.listAllTrips();
                         
                         manager.listTrips(trips);
 
-                        System.out.println("List all users in trip by id: (-1 to leave)");
-                        String response = sc.nextLine();
-                        int r;
-                        try {
-                            r= Integer.parseInt(response);
+                        System.out.println("Select Trip to delete with id (-1 to leave purchase):");
+                        String id = sc.nextLine();
+                        int trip_id;
+                        try{
+                            trip_id= Integer.parseInt(id);  
+                        }
+                        catch(NumberFormatException ex){
+                            System.out.println("No valid id");
+                            return;
+                        }
+                        if(trip_id==-1) return;
+                        if(trip_id>trips.size()){
+                            System.out.println("No valid id");
+                            return;
+                        }
+
+                        System.out.println("Processing purchase....");
+                        System.out.println(manager.bd.deleteTrip(trips.get(trip_id)));
+                        break;
+
+
+
+                    case 3: //List top 5 people
+                        System.out.println("Top 5 users:");
+                        System.out.println(manager.bd.listTopUsers());
+                        break;
+                    case 4: //list trips by interval
+                        System.out.println("inicial date:");
+                        String start = sc.nextLine();
+                        System.out.println("final date:");
+                        String end = sc.nextLine();
+                        //convert to Date
+                        try{
+                            Date date_start = formatter.parse(start);
+                            Date date_end = formatter.parse(end);
+                            trips= manager.bd.listTrips(date_start,date_end);
+                            manager.getTripUsers(trips);
+
+                        }catch(ParseException e){
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 5: //list trips on certain day
+                        System.out.println("Day to check trips:");
+                        String d = sc.nextLine();
+                        //convert to Date 
+                        try{
+                            Date date_start = formatter.parse(d);
+
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(date_start);
+                            cal.add(Calendar.DATE, 1);
+
+                            Date date_end = cal.getTime();
+
+                            trips= manager.bd.listTrips(date_start,date_end);
                             
-                        } catch (Exception e) {
-                            System.out.println("not valid, leaving");
-                            break;
+                            manager.getTripUsers(trips);
+
+                        }catch(ParseException e){
+                            e.printStackTrace();
                         }
-
-                        if(r==-1 || r>=trips.size()){
-                            System.out.println("leaving...");
-                            break;
-                        }
-
-                        int trip_id= trips.get(r).getId();
-                        
-
-                        manager.listUsers(trip_id);
-
                         break;
-
-
-                        
+  
+                    case 6:
+                        manager.bd.getRevenue();
+                        break;
                     default:
-                        break;
+                        return;
                 }
 
 
@@ -155,59 +194,39 @@ public class ManagerBean
             
     }
 
+    public void getTripUsers(List<Trip> trips){
+        //List Trips
+        listTrips(trips);
 
-    public void listUsers(int trip_id){
-        
-        //new query
-        //Select buyer_id from tickets where trip_id=:trip_id
-        //Select * from users where id=:buyers //this buyers is the list of buyer_ids
-        
-        //List<User> u = q.getResultList();
-        List<Utilizador> u= new ArrayList<>();
+        System.out.println("Get users in Trip with id (-1 to leave):");
+        String id = sc.nextLine();
+        int trip_id;
+        try{
+            trip_id= Integer.parseInt(id);  
+        }
+        catch(NumberFormatException ex){
+            System.out.println("No valid id");
+            return;
+        }
+        if(trip_id==-1) return;
+        if(trip_id>trips.size()){
+            System.out.println("No valid id");
+            return;
+        }
 
-        if (u.size()==0){
+        List<Utilizador> users= bd.getUsers(trips.get(trip_id));
+
+        if (users.size()==0){
             System.out.println("There are no current users in this trip");
             return;
         }
 
-        System.out.println("List of users in this trip");
-        for(int i=0; i< u.size(); i++){
-            System.out.println( i + " "+ u.get(i).toString());
-        }
-
+        System.out.println("List of Users");
+        for(Utilizador u: users) System.out.println( u.getName());
+        
     }
 
-    public void topUsers(){
-        
-        //new query
-        
-        /*
-
-        SELECT buyer_id , COUNT(buyer_id)
-        FROM
-        tickets
-        GROUP BY buyer_id
-        SORT DESC
-        */
-
-        //Select * from users where id=:buyers //this buyers is the list of buyer_ids
-        
-        //List<User> u = q.getResultList();
-        List<Utilizador> u= new ArrayList<>();
-        int count= 1; // count of the buyer id
-
-        if (u.size()==0){
-            System.out.println("There are no users with trips");
-            return;
-        }
-
-        System.out.println("Top 5 List of users");
-        for(int i=0; i< 5 || i< u.size(); i++){
-            System.out.println( (i+1) + ": "+ count + " tickets, "+ u.get(i).toString());
-        }
-
-    }
-
+    
 	public void listTrips(List<Trip> trips){
         if (trips.size()==0){
             System.out.println("There are no upcoming trips");
@@ -219,5 +238,7 @@ public class ManagerBean
             System.out.println( i+ " "+ trips.get(i).toString());
         }
     }
+
+
 
 }

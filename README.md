@@ -25,18 +25,18 @@ ignore the step that involves the payment itself)
 - [x]  As a user, I may be able to return a ticket for future trips and get a reimbursement
 in my wallet.
 - [x] As a user, I can list my trips.
-- [ ] As a company manager, I want to create future bus trips, including the departure
+- [x] As a company manager, I want to create future bus trips, including the departure
 date and hour, departure point, destination, capacity, and price. You may assume
 that departure and destination points are limited.
 - [ ] As a company manager, I want to delete future bus trips. The money of all tickets
 should be returned to the correct wallets, and the system should warn the
 affected users by email.
-- [ ] As a company manager I want to list the passengers that have made more trips
+- [x] As a company manager I want to list the passengers that have made more trips
 (e.g., the top 5).
-- [ ] As a company manager I want to search for all bus trips sorted by date between
+- [x] As a company manager I want to search for all bus trips sorted by date between
 two date limits.
-- [ ] As a company manager I want to search for all bus trips occurring on a given date.
-- [ ] As a company manager I want to list all passengers on a given trip listed during
+- [x] As a company manager I want to search for all bus trips occurring on a given date.
+- [x] As a company manager I want to list all passengers on a given trip listed during
 one of the previous searches.
 - [ ] The system sends a daily summary of the revenues of that day’s trips to the
 managers.
