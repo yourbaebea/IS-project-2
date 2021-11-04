@@ -28,7 +28,7 @@ in my wallet.
 - [x] As a company manager, I want to create future bus trips, including the departure
 date and hour, departure point, destination, capacity, and price. You may assume
 that departure and destination points are limited.
-- [ ] As a company manager, I want to delete future bus trips. The money of all tickets
+- [x] As a company manager, I want to delete future bus trips. The money of all tickets
 should be returned to the correct wallets, and the system should warn the
 affected users by email.
 - [x] As a company manager I want to list the passengers that have made more trips
@@ -42,3 +42,9 @@ one of the previous searches.
 managers.
 - [ ] To create manager accounts the system should use a script, e.g., written in JPA.
  
+notes: email stuff is not done, daily sums is but this should be automatic and rn it isnt
+how to login in a session ?
+do we need to save the manager in the db?
+how to we do the email stuff? do we need a new table with messages to read or something or is just hipothetic?
+how to we do the hashed password and conversions with safety?
+
