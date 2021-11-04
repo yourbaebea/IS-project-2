@@ -11,8 +11,6 @@ import java.util.Scanner;
 import Classes.*;
 import Data.DataLayer;
 
-//questions for the teacher, do we need to save the manager in the db?
-
 
 public class ManagerBean
 {
@@ -177,12 +175,19 @@ public class ManagerBean
                             manager.getTripUsers(trips);
 
                         }catch(ParseException e){
-                            e.printStackTrace();
+                            System.out.println("Wrong format");
                         }
                         break;
   
                     case 6:
-                        manager.bd.getRevenue();
+                        System.out.println("this should should be automatic at the end of the day send the report, but for rn input date for the revenue calculator:");
+                        String d = sc.nextLine();
+                        try{
+                            Date yesterday= formatter.parse(d);
+                            manager.bd.getRevenue(yesterday);
+                        }catch(ParseException e){
+                            System.out.println("Wrong format");
+                        }
                         break;
                     default:
                         return;
