@@ -26,7 +26,10 @@ public class DataLayer{
             emf = Persistence.createEntityManagerFactory("Bus");
             em = emf.createEntityManager();
         }catch(Exception e){
+            System.out.println("erro aqui");
+           
            System.out.println(e);
+
         }
     }
 

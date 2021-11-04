@@ -47,4 +47,5 @@ how to login in a session ?
 do we need to save the manager in the db?
 how to we do the email stuff? do we need a new table with messages to read or something or is just hipothetic?
 how to we do the hashed password and conversions with safety?
+usar apenas o .remove etcetc ou o comit tb
 

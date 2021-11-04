@@ -181,9 +181,9 @@ public class ManagerBean
   
                     case 6:
                         System.out.println("this should should be automatic at the end of the day send the report, but for rn input date for the revenue calculator:");
-                        String d = sc.nextLine();
+                        String d2 = sc.nextLine();
                         try{
-                            Date yesterday= formatter.parse(d);
+                            Date yesterday= formatter.parse(d2);
                             manager.bd.getRevenue(yesterday);
                         }catch(ParseException e){
                             System.out.println("Wrong format");
