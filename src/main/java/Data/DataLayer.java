@@ -114,7 +114,7 @@ public class DataLayer{
     public String createTicket(Trip trip, Utilizador user){        
         if(user.checkWallet( -trip.getPrice())){
 
-            if(trip.buyTicket(user.getId())){
+            if(trip.buyTicket(user.getId(),trip)){
                 user.balanceWallet(-trip.getPrice());
                 em.persist(user);
                 em.persist(trip); // im not sure here tho
@@ -169,39 +169,39 @@ public class DataLayer{
 
     //List 
     public List<Trip> listDailyTrips(Date start){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time::DATE AS Date = CAST( :day AS Date ) ORDER BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time = :day ORDER BY t.time", Trip.class)
         .setParameter("day", start);
         return q.getResultList();
     }
     
     //Delete trip, still missing email stuff IM REALLY NOT SURE HERE HOW TO DELETE ALL OF THIS
-    public String deleteTrip(Trip trip){
-        em.getTransaction().begin();
+    public String deleteTrip(Trip trip) {
+
         TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip.id =:trip_id", Utilizador.class)
-        .setParameter("trip_id",trip.getId());
+                .setParameter("trip_id", trip.getId());
 
-        List<Utilizador> u= q.getResultList();
 
-        if(u.size()==0) return "Trip was deleted, there were no tickets sold so it was only removed from the table";
-        
-        for(Utilizador user: u){
-            incrementWallet(user, trip.getPrice());
-            //whatever email means should be here
-        }
+        List<Utilizador> u = q.getResultList();
+        em.getTransaction().begin();
+        if (u.size() != 0){
+            for (Utilizador user : u) {
+                incrementWallet(user, trip.getPrice());
+                //whatever email means should be here
+            }
 
         Query q2 = em.createQuery("DELETE FROM Ticket t1 WHERE t1=:trip_id")
-            .setParameter("trip_id",trip.getId());
+                .setParameter("trip_id", trip.getId());
 
+        }
         em.remove(trip);
         em.getTransaction().commit();
-
+        if(u.size()==0)return "Trip was deleted, there were no tickets sold so it was only removed from the table";
         return "Trip was deleted, all the purchases were returned and emails sent!";
-    
     }
 
     //List top users
     public String listTopUsers(){
-        Query q = em.createQuery("SELECT u.name, COUNT(t1.buyer_id) as c FROM Ticket t1 INNER JOIN Utilizador u ON t1.buyer_id = u.id GROUP BY t1.buyer_id ORDER by c DESC LIMIT 5");
+        Query q = em.createQuery("SELECT u.name, COUNT(t1.buyer_id) as c FROM Ticket t1 INNER JOIN Utilizador u ON t1.buyer_id = u.id  GROUP BY u.name  ORDER by c DESC LIMIT 5");
         String s="";
         try {
             List<Object[]> list = q.getResultList();
@@ -235,7 +235,7 @@ public class DataLayer{
     }
 
     public String getRevenue(Date yesterday){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time::DATE AS Date= CAST( :day AS Date ) SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time =:day ORDER BY t.time", Trip.class)
             .setParameter("day", yesterday);
         
         List<Trip> trips= q.getResultList();

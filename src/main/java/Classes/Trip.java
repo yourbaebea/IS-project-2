@@ -52,12 +52,12 @@ public class Trip implements Serializable {
 
     }
 
-    public boolean buyTicket(Long buyer_id){
+    public boolean buyTicket(Long buyer_id,Trip trip){
         if (this.occupancy<this.capacity){
-            for(Ticket t: this.tickets) if(t.getBuyer_id()== buyer_id){
+            for(Ticket t: this.tickets) if(t.getBuyer_id().equals(buyer_id)){
                 return false;
             }
-            this.tickets.add(new Ticket(buyer_id));
+            this.tickets.add(new Ticket(buyer_id,trip));
             this.occupancy--;
             return true;
         }

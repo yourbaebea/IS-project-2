@@ -51,8 +51,8 @@ public class ManagerBean
 
 			    int option = Integer.parseInt(sc.nextLine());
                 List<Trip> trips;
-                SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                
+                SimpleDateFormat formatter=new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                SimpleDateFormat formatter2=new SimpleDateFormat("dd/MM/yyyy");
                 switch (option) {
                     case 1: //create trip
                         System.out.println("origin:");
@@ -162,7 +162,7 @@ public class ManagerBean
                         String d = sc.nextLine();
                         //convert to Date 
                         try{
-                            Date date_start = formatter.parse(d);
+                            Date date_start = formatter2.parse(d);
 
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(date_start);

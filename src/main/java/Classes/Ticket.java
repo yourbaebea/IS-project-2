@@ -20,8 +20,9 @@ public class Ticket implements Serializable {
 
     public Ticket(){}
 
-    public Ticket(Long buyer_id){
+    public Ticket(Long buyer_id , Trip trip){
         this.buyer_id= buyer_id;
+        this.trip = trip;
     }
 
     public Long getBuyer_id() {
