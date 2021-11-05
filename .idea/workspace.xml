@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bbbc7ee7-8063-48c7-a6b3-c08c811c5078" name="Changes" comment="" />
+    <list default="true" id="bbbc7ee7-8063-48c7-a6b3-c08c811c5078" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/artifacts/unnamed.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Bean/ManagerBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Bean/UserBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Classes/Ticket.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Classes/Trip.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Classes/Utilizador.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/Data/DataLayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/classes/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/out/artifacts/unnamed/WEB-INF/lib/postgresql-42.2.24.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Bean/ManagerBean.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Bean/UserBean.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Classes/Ticket.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Classes/Trip.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Classes/Utilizador.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/java/Data/DataLayer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/src/main/resources/META-INF/persistence.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Bean/ManagerBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Bean/UserBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Classes/Ticket.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Classes/Trip.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Classes/Utilizador.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/Data/DataLayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/IS_2/target/classes/META-INF/persistence.xml" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,7 +46,6 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/main/java/Bean/UserBean.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/Functions/UserInterface.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/pom.xml" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1zzcWkDbdWHxnI173ZsRgfOk6wm" />
@@ -24,7 +57,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/postgresql-42.2.24.jar" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Ambiente de Trabalho/IS_2" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.29310346" />
@@ -39,6 +72,9 @@
       <updated>1635154488248</updated>
       <workItem from="1635154497157" duration="335000" />
       <workItem from="1635176022259" duration="669000" />
+      <workItem from="1636049810718" duration="121000" />
+      <workItem from="1636049987815" duration="936000" />
+      <workItem from="1636109284811" duration="44000" />
     </task>
     <servers />
   </component>

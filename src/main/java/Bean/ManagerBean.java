@@ -109,7 +109,7 @@ public class ManagerBean
                         }
 
                         System.out.println(manager.bd.createTrip(new Trip(origin, destination, date, p, c)));
-
+                        break;
                     case 2: //Delete trip
                         trips= manager.bd.listAllTrips();
                         
@@ -181,7 +181,7 @@ public class ManagerBean
   
                     case 6:
                         System.out.println("this should should be automatic at the end of the day send the report, but for rn input date for the revenue calculator:");
-                        String d = sc.nextLine();
+                        d = sc.nextLine();
                         try{
                             Date yesterday= formatter.parse(d);
                             manager.bd.getRevenue(yesterday);

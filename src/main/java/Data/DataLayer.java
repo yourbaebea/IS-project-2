@@ -55,7 +55,7 @@ public class DataLayer{
             TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u WHERE u.email=:email", Utilizador.class)
                 .setParameter("email",email);
             Utilizador u= q.getSingleResult();
-            if(u.getPassword()==password) return u; //HERE
+            if(u.getPassword().equals(password)) return u; //HERE
             return null;
         } catch(NoResultException e) {
             return null;
@@ -83,7 +83,7 @@ public class DataLayer{
 
     //List trips by date
     public List<Trip> listTrips(Date start , Date end){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.time>=:start AND t.time<:end SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.time>=:start AND t.time<:end ORDER BY t.time", Trip.class)
         .setParameter("start",start)
         .setParameter("end",end);
 
@@ -93,7 +93,7 @@ public class DataLayer{
     // list all future trips of the user
     public List<Trip> listUserTrips(Long user_id) {
 
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t INNER JOIN Ticket t1 ON t.id = t1.trip_id WHERE t1.buyer_id =:user_id AND t.time > GETDATE() SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t INNER JOIN Ticket t1 ON t.id = t1.trip_id WHERE t1.buyer_id =:user_id AND t.time > CURRENT_DATE ORDER BY t.time", Trip.class)
                 .setParameter("user_id", user_id);
 
         return q.getResultList();
@@ -102,7 +102,7 @@ public class DataLayer{
     //list all future trips
     public List<Trip> listAvailableTrips(String origin , String destination){
 
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.destination=:destination AND t.origin =:origin AND t.time > GETDATE() AND (t.capacity - t.occupancy> 0) SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.destination=:destination AND t.origin =:origin AND t.time > current_date AND (t.capacity - t.occupancy> 0) ORDER BY t.time", Trip.class)
                 .setParameter("destination",destination)
                 .setParameter("origin",origin);
 
@@ -154,20 +154,22 @@ public class DataLayer{
     /*------------------------------------------------MANAGER FUNCTIONS--------------------------------------------------------------*/
 
     //create a new trip
-    public String createTrip(Trip trip){        
+    public String createTrip(Trip trip){
+        em.getTransaction().begin();
         em.persist(trip);
+        em.getTransaction().commit();
         return "New Trip created!";
     }
 
     //List all trips
     public List<Trip> listAllTrips(){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.time> GETDATE() SORT BY t.time", Trip.class);
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE t.time> CURRENT_DATE ORDER BY t.time", Trip.class);
         return q.getResultList();
     }
 
     //List 
     public List<Trip> listDailyTrips(Date start){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  CAST( t.time AS Date )= CAST( :day AS Date ) SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  CAST( t.time AS Date )= CAST( :day AS Date ) ORDER BY t.time", Trip.class)
         .setParameter("day", start);
         return q.getResultList();
     }
@@ -197,7 +199,7 @@ public class DataLayer{
 
     //List top users
     public String listTopUsers(){
-        Query q = em.createQuery("SELECT u.name, COUNT(t1.buyer_id) FROM Ticket t1 INNER JOIN Utilizador u ON t1.buyer_id = u.id GROUP BY t1.buyer_id SORT DESC LIMIT 5");
+        Query q = em.createQuery("SELECT u.name, COUNT(t1.buyer_id) as c FROM Ticket t1 INNER JOIN Utilizador u ON t1.buyer_id = u.id GROUP BY t1.buyer_id ORDER by c DESC LIMIT 5");
         String s="";
         try {
             List<Object[]> list = q.getResultList();
@@ -215,19 +217,17 @@ public class DataLayer{
                 }
                 else break;
             }
-            
-            
         } catch (Exception e) {
             return "Error returning the top users in the app";
         }
 
-        if (s=="") s= "No users bought tickets yet! Please try this again when there are more purchases";
+        if (s.equals("")) s= "No users bought tickets yet! Please try this again when there are more purchases";
         return s;
     }
 
     //List users in trip
     public List<Utilizador> getUsers(Trip trip){
-        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip_id =:trip_id SORT BY u.name", Utilizador.class)
+        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip_id =:trip_id ORDER BY u.name", Utilizador.class)
         .setParameter("trip_id",trip.getId());
         return q.getResultList();
     }

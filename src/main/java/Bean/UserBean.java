@@ -145,12 +145,12 @@ public class UserBean {
                     break;
 
                 case 3: //list all trips with interval
-                    System.out.println("inicial date:");
+                    System.out.println("inicial date (dd/MM/yyyy HH:mm):");
                     String start = sc.nextLine();
-                    System.out.println("final date:");
+                    System.out.println("final date (dd/MM/yyyy HH:mm):");
                     String end = sc.nextLine();
                     //convert to Date
-                    SimpleDateFormat formatter=new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                    SimpleDateFormat formatter=new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     try{
                         Date data_inicio = formatter.parse(start);
                         Date data_fim = formatter.parse(end);
