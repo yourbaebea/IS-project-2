@@ -93,7 +93,7 @@ public class DataLayer{
     // list all future trips of the user
     public List<Trip> listUserTrips(Long user_id) {
 
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t INNER JOIN Ticket t1 ON t.id = t1.trip_id WHERE t1.buyer_id =:user_id AND t.time > CURRENT_DATE ORDER BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t INNER JOIN Ticket t1 ON t.id = t1.trip.id WHERE t1.buyer_id =:user_id AND t.time > CURRENT_DATE ORDER BY t.time", Trip.class)
                 .setParameter("user_id", user_id);
 
         return q.getResultList();
@@ -129,7 +129,7 @@ public class DataLayer{
     //returns the ticket value and deletes ticket from db
     public String returnTicket(Trip trip, Utilizador user){
 
-        TypedQuery<Ticket> q = em.createQuery("SELECT DISTINCT t1 FROM Ticket t1 WHERE t1.buyer_id =:user_id AND t1.trip_id=:trip_id", Ticket.class)
+        TypedQuery<Ticket> q = em.createQuery("SELECT DISTINCT t1 FROM Ticket t1 WHERE t1.buyer_id =:user_id AND t1.trip.id=:trip_id", Ticket.class)
                 .setParameter("user_id", user.getId())
                 .setParameter("trip_id", trip.getId());
         
@@ -169,14 +169,15 @@ public class DataLayer{
 
     //List 
     public List<Trip> listDailyTrips(Date start){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  CAST( t.time AS Date )= CAST( :day AS Date ) ORDER BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time::DATE AS Date = CAST( :day AS Date ) ORDER BY t.time", Trip.class)
         .setParameter("day", start);
         return q.getResultList();
     }
     
     //Delete trip, still missing email stuff IM REALLY NOT SURE HERE HOW TO DELETE ALL OF THIS
     public String deleteTrip(Trip trip){
-        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip_id =:trip_id", Utilizador.class)
+        em.getTransaction().begin();
+        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip.id =:trip_id", Utilizador.class)
         .setParameter("trip_id",trip.getId());
 
         List<Utilizador> u= q.getResultList();
@@ -190,8 +191,9 @@ public class DataLayer{
 
         Query q2 = em.createQuery("DELETE FROM Ticket t1 WHERE t1=:trip_id")
             .setParameter("trip_id",trip.getId());
-        
+
         em.remove(trip);
+        em.getTransaction().commit();
 
         return "Trip was deleted, all the purchases were returned and emails sent!";
     
@@ -227,13 +229,13 @@ public class DataLayer{
 
     //List users in trip
     public List<Utilizador> getUsers(Trip trip){
-        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip_id =:trip_id ORDER BY u.name", Utilizador.class)
+        TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u INNER JOIN Ticket t1 ON u.id = t1.buyer_id WHERE t1.trip.id =:trip_id ORDER BY u.name", Utilizador.class)
         .setParameter("trip_id",trip.getId());
         return q.getResultList();
     }
 
     public String getRevenue(Date yesterday){
-        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  CAST( t.time AS Date )= CAST( :day AS Date ) SORT BY t.time", Trip.class)
+        TypedQuery<Trip> q = em.createQuery("SELECT DISTINCT t FROM Trip t WHERE  t.time::DATE AS Date= CAST( :day AS Date ) SORT BY t.time", Trip.class)
             .setParameter("day", yesterday);
         
         List<Trip> trips= q.getResultList();
