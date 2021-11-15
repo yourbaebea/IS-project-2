@@ -76,7 +76,14 @@ public class EJBUser implements EJBUserRemote {
         switch(option){
             case 1: user.setName(change); break;
             case 2: user.setPassword(getHashedPassword(change)); break;
-            case 3: user.setEmail(change); break;
+            case 3: 
+                user.setEmail(change);
+                TypedQuery<Utilizador> q = em.createQuery("SELECT DISTINCT u FROM Utilizador u WHERE u.email=:email", Utilizador.class)
+                .setParameter("email",change);
+                List<Utilizador> u = q.getResultList();
+                if(u.size()!=0) return false;
+                user.setEmail(change);
+                break;
             case 4: user.setAddress(change); break;
             case 5: user.setPhone(Integer.parseInt(change)); break;
         }
