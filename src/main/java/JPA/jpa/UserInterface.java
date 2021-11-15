@@ -181,6 +181,10 @@ public class UserInterface {
                     System.out.println("Processing...");
                     try {
                         value= Double.parseDouble(cash);
+			if(value <=0){
+				System.out.println("You cant remove money from wallet!");
+				break;
+			}
                         bd.incrementWallet(this.user,value);
                         System.out.println("Current value inside wallet: "+ this.user.getWallet());
                     } catch (Exception e) {
