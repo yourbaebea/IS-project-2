@@ -1,9 +1,11 @@
 package EJB.ejb;
 
 import JPA.jpa.*;
+import EJB.ejb.EJBEmail;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.Schedule;
 import javax.persistence.*;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -105,7 +107,6 @@ public class EJBManager implements EJBManagerRemote {
 
         List<Utilizador> u= q.getResultList();
 
-
         if(u.size()!=0){
 
             for(Utilizador user: u){
@@ -118,6 +119,10 @@ public class EJBManager implements EJBManagerRemote {
                     .setParameter("trip_id",trip.getId()).executeUpdate();
             em.getTransaction().commit();
         }
+
+        DeletedTripEmail(u, trip);
+
+
         em.getTransaction().begin();
         em.remove(trip); //Delete trip
         em.getTransaction().commit();
@@ -145,7 +150,7 @@ public class EJBManager implements EJBManagerRemote {
         return q.getResultList();
     }
 
-    public List<Trip> getRevenue() {
+    private List<Trip> getRevenueTrips() {
 
         SimpleDateFormat formatter=new SimpleDateFormat("dd/MM/yyyy HH:mm");
         LocalDateTime now = LocalDateTime.now();
@@ -167,10 +172,9 @@ public class EJBManager implements EJBManagerRemote {
         return trips;
     }
 
-    //where should this function be???
-    public boolean sendEmail(List<Trip> trips){
-        TypedQuery<Manager> q = em.createQuery("SELECT DISTINCT m FROM Manager m", Manager.class);
-        List<Manager> m= q.getResultList();
+    @Schedule(hour="23", minute="59", second="0")
+    public void scheduledEmail(){
+        List<Trip> trips = getRevenueTrips();
 
         Double count_money=0.0;
         int count_people=0;
@@ -178,14 +182,40 @@ public class EJBManager implements EJBManagerRemote {
             count_money += t.getOccupancy() * t.getPrice();
             count_people += t.getOccupancy();
         }
-        String message="Earned "+ count_money + " euros from " + trips.size() + " trips, with a total of "+ count_people + " tickets bought!";
-       
-        //connect to wildfly
-        //send email
-        //for(Manager manager: m) wildfly(message, manager.getEmail);
-        return true;
+        String message;
+        if (count_people>0) message="Earned "+ count_money + " euros from " + trips.size() + " trips, with a total of "+ count_people + " tickets bought!\n";
+        else{
+            message="No one bought tickets today!\n";
+        }
+
+        TypedQuery<Manager> q = em.createQuery("SELECT DISTINCT m FROM Manager m", Manager.class);
+        List<Manager> m= q.getResultList();
+        if(m.size()<=0) return;
+
+        EJBEmail email= new EJBEmail();
+        for(Manager manager: m)  email.sendEmail(manager.getEmail(), "Bus company- Daily Revenue", message);
+
+        return;
 
     }
+
+
+    public void DeletedTripEmail(List<Utilizador> utilizadores, Trip t){
+
+        if(utilizadores.size()<=0) return;
+
+        EJBEmail email= new EJBEmail();
+        String topline="Trip " + t.getId() + " Deleted";
+        String message= "Dear customer, the trip\n"+ t.toString() +"\n was unfortunaly cancelled, the value of "+ t.getPrice() + "was returned to your wallet. We are sorry for the inconvinience,\nBus Company\n";
+        for(Utilizador u: utilizadores)  email.sendEmail(u.getEmail(), "Bus company- Daily Revenue", message);
+
+        return;
+
+    }
+
+
+
+
 
     public String getHashedPassword(String password) {
         try {

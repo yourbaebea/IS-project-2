@@ -23,8 +23,8 @@ public interface EJBManagerRemote {
     public List<Trip> listTrips(Date start , Date end);
     public List<Object[]> listTopUsers();
     public List<Utilizador> getUsers(Trip trip);
-    public List<Trip> getRevenue();
-    public boolean sendEmail(List<Trip> trips);
+    public void scheduledEmail();
+    public void DeletedTripEmail(List<Utilizador> utilizadores, Trip t);
 
 
 }
